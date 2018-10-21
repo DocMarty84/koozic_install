@@ -14,16 +14,19 @@ from tempfile import NamedTemporaryFile
 import urllib.request
 
 BRANCH = 'v1'
-DB_NAME = 'koozic{}'.format(BRANCH)
+K_NAME_DIR = K_NAME_DB = 'koozic-{}'.format(BRANCH)
 DOWN_URL = 'https://github.com/DocMarty84/koozic/releases/download/{v}/koozic-{v}.tar.gz'
 
+# To remove in v2
+K_NAME_DB = 'koozic11'
+K_NAME_DIR = 'koozic'
 
 class Driver():
     def __init__(self, args):
         self.dep = set([])
         self.pip_dep = set([])
         self.user = args.user
-        self.dir = os.path.join(args.directory, 'koozic')
+        self.dir = os.path.join(args.directory, K_NAME_DIR)
 
     def __setitem__(self, key, val):
         return setattr(self, key, val)
@@ -114,7 +117,7 @@ class Driver():
             s.call(['systemctl', 'stop', 'koozic@{}.service'.format(self.user)])
             s.call(['systemctl', 'disable', 'koozic@{}.service'.format(self.user)])
         if self._ask_user('Do you want to drop the KooZic database? '):
-            s.call('su - {} -c "dropdb {}"'.format(self.user, DB_NAME), shell=True)
+            s.call('su - {} -c "dropdb {}"'.format(self.user, K_NAME_DB), shell=True)
 
     def clean_files(self):
         to_delete = [
@@ -173,7 +176,7 @@ class Driver():
         return (
             'su - {} -c "{}{}odoo-bin -i oomusic,oovideo -d {} '
             '--without-demo=all --stop-after-init --log-level=warn"'.format(
-                self.user, self.dir, os.sep, DB_NAME
+                self.user, self.dir, os.sep, K_NAME_DB
             )
         )
 
@@ -185,8 +188,8 @@ class Driver():
         limit_memory_soft = min(max_mem / (workers + max_cron_threads), 2048 * 1024 ** 2)
         limit_memory_hard = max_mem * 0.90
         return {
-            'db_name': DB_NAME,
-            'dbfilter': '^{}$'.format(DB_NAME),
+            'db_name': K_NAME_DB,
+            'dbfilter': '^{}$'.format(K_NAME_DB),
             'limit_memory_hard': max(1024 ** 3, int(limit_memory_hard)),
             'limit_memory_soft': max(256 * 1024 ** 2, int(limit_memory_soft)),
             'limit_time_cpu': 1800,
@@ -691,7 +694,7 @@ with urllib.request.urlopen(url_versions) as response:
 
 if args.mode == 'install':
     # Check directory
-    dir = os.path.join(args.directory, 'koozic{}'.format(BRANCH))
+    dir = os.path.join(args.directory, K_NAME_DIR)
     if os.path.exists(dir):
         sys.exit(
             'Directory {} already exists. Delete this directory of choose another one.'
