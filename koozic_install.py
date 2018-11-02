@@ -6,12 +6,12 @@ from glob import glob
 from multiprocessing import cpu_count
 import os
 import pwd
-from shutil import copyfileobj, move, rmtree
+import requests
+from shutil import move, rmtree
 import subprocess as s
 import sys
 import tarfile
 from tempfile import NamedTemporaryFile
-import urllib.request
 
 BRANCH = 'v1'
 K_NAME_DIR = K_NAME_DB = 'koozic-{}'.format(BRANCH)
@@ -62,9 +62,9 @@ class Driver():
 
     def download_and_extract(self):
         print('Downloading the latest KooZic version...')
-        with urllib.request.urlopen(DOWN_URL) as response, NamedTemporaryFile() as out_file:
+        with NamedTemporaryFile() as out_file:
             dir = os.path.split(self.dir)[0]
-            copyfileobj(response, out_file)
+            out_file.write(requests.get(DOWN_URL).content)
             tarfile.open(name=out_file.name).extractall(path=dir)
         s.call(['chown', '-R', '{u}:{u}'.format(u=self.user), self.dir])
 
@@ -688,9 +688,8 @@ args = parser.parse_args()
 
 # Get latest version
 url_versions = 'https://raw.githubusercontent.com/DocMarty84/koozic/{}/VERSIONS.md'.format(BRANCH)
-with urllib.request.urlopen(url_versions) as response:
-    version = response.readline()[:-1].decode('utf-8')
-    DOWN_URL = DOWN_URL.format(v=version)
+lines = requests.get(url_versions).iter_lines(decode_unicode=True)
+DOWN_URL = DOWN_URL.format(v=next(lines))
 
 if args.mode == 'install':
     # Check directory
