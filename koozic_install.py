@@ -13,13 +13,10 @@ import sys
 import tarfile
 from tempfile import NamedTemporaryFile
 
-BRANCH = 'v1'
+BRANCH = 'v2'
 K_NAME_DIR = K_NAME_DB = 'koozic-{}'.format(BRANCH)
 DOWN_URL = 'https://github.com/DocMarty84/koozic/releases/download/{v}/koozic-{v}.tar.gz'
 
-# To remove in v2
-K_NAME_DB = 'koozic11'
-K_NAME_DIR = 'koozic'
 
 class Driver():
     def __init__(self, args):
@@ -66,6 +63,7 @@ class Driver():
             dir = os.path.split(self.dir)[0]
             out_file.write(requests.get(DOWN_URL).content)
             tarfile.open(name=out_file.name).extractall(path=dir)
+            os.rename(os.path.join(dir, 'koozic'), self.dir)
         s.call(['chown', '-R', '{u}:{u}'.format(u=self.user), self.dir])
 
     def copy_ffmpeg(self):
@@ -272,10 +270,10 @@ class DriverDeb(Driver):
             'libtag1-dev',
             'lsb-base',
             'mediainfo',
-            'node-less',
             'postgresql',
             'postgresql-client',
             'python3-babel',
+            'python3-chardet',
             'python3-dateutil',
             'python3-decorator',
             'python3-dev',
@@ -284,6 +282,7 @@ class DriverDeb(Driver):
             'python3-gevent',
             'python3-html2text',
             'python3-jinja2',
+            'python3-libsass',
             'python3-lxml',
             'python3-mako',
             'python3-mock',
@@ -310,8 +309,8 @@ class DriverDeb(Driver):
             'python3-yaml',
         ])
         self.pip_dep |= set([
-            'mutagen==1.40.0',
-            'pytaglib==1.4.3',
+            'mutagen==1.41.1',
+            'pytaglib==1.4.4',
         ])
 
     def _install(self, packages=[]):
@@ -328,7 +327,6 @@ class DriverRpm(Driver):
             'gcc-c++',
             'libxslt-python',
             'mediainfo',
-            'nodejs-less',
             'postgresql',
             'postgresql-contrib',
             'postgresql-devel',
@@ -337,6 +335,7 @@ class DriverRpm(Driver):
             'pychart',
             'pyparsing',
             'python3-babel',
+            'python3-chardet',
             'python3-dateutil',
             'python3-decorator',
             'python3-devel',
@@ -346,6 +345,7 @@ class DriverRpm(Driver):
             'python3-greenlet',
             'python3-html2text',
             'python3-jinja2',
+            'python3-libsass',
             'python3-lxml',
             'python3-mako',
             'python3-markupsafe',
@@ -379,8 +379,8 @@ class DriverRpm(Driver):
             'taglib-devel',
         ])
         self.pip_dep |= set([
-            'mutagen==1.40.0',
-            'pytaglib==1.4.3',
+            'mutagen==1.41.1',
+            'pytaglib==1.4.4',
             'XlsxWriter==0.9.3',
         ])
 
@@ -430,7 +430,7 @@ class DriverDebian9(DriverDeb):
         super().__init__(args)
 
 
-class DriverFedora27(DriverRpm):
+class DriverFedora29(DriverRpm):
     def setup_postgresql(self):
         s.call(['postgresql-setup', '--initdb', '--unit', 'postgresql'])
         super().setup_postgresql()
@@ -444,6 +444,7 @@ class DriverCentos74(DriverRpm):
         super().__init__(args)
         self.dep -= set([
             'python3-babel',
+            'python3-chardet',
             'python3-dateutil',
             'python3-decorator',
             'python3-devel',
@@ -453,6 +454,7 @@ class DriverCentos74(DriverRpm):
             'python3-greenlet',
             'python3-html2text',
             'python3-jinja2',
+            'python3-libsass',
             'python3-lxml',
             'python3-mako',
             'python3-markupsafe',
@@ -493,6 +495,7 @@ class DriverCentos74(DriverRpm):
         ])
         self.pip_dep |= set([
             'Babel==2.3.4',
+            'chardet==3.0.4',
             'decorator==4.0.10',
             'docutils==0.12',
             'ebaysdk==2.1.5',
@@ -500,12 +503,13 @@ class DriverCentos74(DriverRpm):
             'gevent==1.1.2',
             'greenlet==0.4.10',
             'html2text==2016.9.19',
-            'Jinja2==2.8',
+            'Jinja2==2.8.1',
+            'libsass==0.12.3',
             'lxml==3.7.1',
             'Mako==1.0.4',
             'MarkupSafe==0.23',
             'mock==2.0.0',
-            'num2words==0.5.4',
+            'num2words==0.5.6',
             'ofxparse==0.16',
             'passlib==1.6.5',
             'Pillow==4.0.0',
@@ -519,16 +523,18 @@ class DriverCentos74(DriverRpm):
             'python-dateutil==2.5.3',
             'pytz==2016.7',
             'pyusb==1.0.0',
-            'PyYAML==3.12',
             'qrcode==5.3',
             'reportlab==3.3.0',
-            'requests==2.11.1',
+            'requests==2.20.0',
             'suds-jurko==0.6',
             'vatnumber==1.2',
             'vobject==0.9.3',
             'Werkzeug==0.11.15',
+            'XlsxWriter==0.9.3',
             'xlwt==1.3.*',
             'xlrd==1.0.0',
+            'mutagen==1.41.1',
+            'pytaglib==1.4.4',
         ])
 
     def setup_postgresql(self):
@@ -561,27 +567,27 @@ class DriverArch(Driver):
             'gcc',
             'libxml2',
             'libxslt',
-            'nodejs-less',
             'postgresql',
             'python-pip',
             'taglib',
         ])
         self.pip_dep |= set([
             'Babel==2.3.4',
+            'chardet==3.0.4',
             'decorator==4.0.10',
             'docutils==0.12',
             'ebaysdk==2.1.5',
             'feedparser==5.2.1',
-            'gevent==1.1.2',
-            'greenlet==0.4.10',
+            'gevent==1.3.4',
+            'greenlet==0.4.13',
             'html2text==2016.9.19',
-            'Jinja2==2.8',
-            'lxml==3.7.1',
+            'Jinja2==2.8.1',
+            'libsass==0.12.3',
+            'lxml==4.2.3',
             'Mako==1.0.4',
             'MarkupSafe==0.23',
             'mock==2.0.0',
-            'mutagen==1.40.0',
-            'num2words==0.5.4',
+            'num2words==0.5.6',
             'ofxparse==0.16',
             'passlib==1.6.5',
             'Pillow==4.0.0',
@@ -592,21 +598,21 @@ class DriverArch(Driver):
             'pyparsing==2.1.10',
             'PyPDF2==1.26.0',
             'pyserial==3.1.1',
-            'pytaglib==1.4.3',
             'python-dateutil==2.5.3',
             'pytz==2016.7',
             'pyusb==1.0.0',
-            'PyYAML==3.12',
             'qrcode==5.3',
             'reportlab==3.3.0',
-            'requests==2.11.1',
+            'requests==2.20.0',
             'suds-jurko==0.6',
             'vatnumber==1.2',
             'vobject==0.9.3',
             'Werkzeug==0.11.15',
+            'XlsxWriter==0.9.3',
             'xlwt==1.3.*',
             'xlrd==1.0.0',
-            'XlsxWriter==0.9.3',
+            'mutagen==1.41.1',
+            'pytaglib==1.4.4',
         ])
 
     def setup_postgresql(self):
@@ -628,9 +634,9 @@ def get_driver(args):
     os_choices['1'] = ('Ubuntu 18.04', DriverUbuntu1804)
     os_choices['2'] = ('Ubuntu 16.04', DriverUbuntu1604)
     os_choices['3'] = ('Debian 9', DriverDebian9)
-    os_choices['4'] = ('Fedora 27 / 28', DriverFedora27)
+    os_choices['4'] = ('Fedora 29 / 28', DriverFedora29)
     os_choices['5'] = ('CentOS 7.4', DriverCentos74)
-    # os_choices['6'] = ('ArchLinux', DriverArch)
+    os_choices['6'] = ('ArchLinux', DriverArch)
 
     print('Choose your operating system:')
     while True:
