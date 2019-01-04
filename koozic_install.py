@@ -311,6 +311,7 @@ class DriverDeb(Driver):
         self.pip_dep |= set([
             'mutagen==1.41.1',
             'pytaglib==1.4.4',
+            'num2words==0.5.6',
         ])
 
     def _install(self, packages=[]):
