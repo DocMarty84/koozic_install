@@ -385,11 +385,6 @@ class DriverRpm(Driver):
             'XlsxWriter==0.9.3',
         ])
 
-    def setup_postgresql(self):
-        s.call(['systemctl', 'enable', 'postgresql'])
-        s.call(['systemctl', 'start', 'postgresql'])
-        super().setup_postgresql()
-
     def clean_system(self):
         super().clean_system()
         if self._ask_user('Do you want to deactivate the PostgreSQL systemd service? '):
@@ -434,16 +429,23 @@ class DriverDebian9(DriverDeb):
 class DriverFedora29(DriverRpm):
     def setup_postgresql(self):
         s.call(['postgresql-setup', '--initdb', '--unit', 'postgresql'])
+        s.call(['systemctl', 'enable', 'postgresql'])
+        s.call(['systemctl', 'start', 'postgresql'])
         super().setup_postgresql()
 
     def _init_koozic_cmd(self):
         return super()._init_koozic_cmd()[:-1] + ' --db-template=template0"'
 
 
-class DriverCentos74(DriverRpm):
+class DriverCentos76(DriverRpm):
     def __init__(self, args):
         super().__init__(args)
         self.dep -= set([
+            'postgresql',
+            'postgresql-contrib',
+            'postgresql-devel',
+            'postgresql-libs',
+            'postgresql-server',
             'python3-babel',
             'python3-chardet',
             'python3-dateutil',
@@ -539,7 +541,13 @@ class DriverCentos74(DriverRpm):
         ])
 
     def setup_postgresql(self):
-        s.call(['postgresql-setup', 'initdb'])
+        s.call([
+            'yum', 'install', '-y', '-q',
+            'https://download.postgresql.org/pub/repos/yum/10/redhat/rhel-7-x86_64/pgdg-centos10-10-2.noarch.rpm'])
+        s.call(['yum', 'install', '-y', '-q', 'postgresql10-server'])
+        s.call(['/usr/pgsql-10/bin/postgresql-10-setup', 'initdb'])
+        s.call(['systemctl', 'enable', 'postgresql-10'])
+        s.call(['systemctl', 'start', 'postgresql-10'])
         super().setup_postgresql()
 
     def download_and_extract(self):
@@ -635,8 +643,8 @@ def get_driver(args):
     os_choices['1'] = ('Ubuntu 18.04', DriverUbuntu1804)
     os_choices['2'] = ('Ubuntu 16.04', DriverUbuntu1604)
     os_choices['3'] = ('Debian 9', DriverDebian9)
-    os_choices['4'] = ('Fedora 29 / 28', DriverFedora29)
-    os_choices['5'] = ('CentOS 7.4', DriverCentos74)
+    os_choices['4'] = ('Fedora 29', DriverFedora29)
+    os_choices['5'] = ('CentOS 7.6', DriverCentos76)
     os_choices['6'] = ('ArchLinux', DriverArch)
 
     print('Choose your operating system:')
