@@ -312,6 +312,7 @@ class DriverDeb(Driver):
             'mutagen==1.41.1',
             'pytaglib==1.4.4',
             'num2words==0.5.6',
+            'webvtt-py==0.4.2',
         ])
 
     def _install(self, packages=[]):
@@ -382,6 +383,7 @@ class DriverRpm(Driver):
         self.pip_dep |= set([
             'mutagen==1.41.1',
             'pytaglib==1.4.4',
+            'webvtt-py==0.4.2',
             'XlsxWriter==0.9.3',
         ])
 
@@ -538,6 +540,7 @@ class DriverCentos76(DriverRpm):
             'xlrd==1.0.0',
             'mutagen==1.41.1',
             'pytaglib==1.4.4',
+            'webvtt-py==0.4.2',
         ])
 
     def setup_postgresql(self):
@@ -622,6 +625,7 @@ class DriverArch(Driver):
             'xlrd==1.0.0',
             'mutagen==1.41.1',
             'pytaglib==1.4.4',
+            'webvtt-py==0.4.2',
         ])
 
     def setup_postgresql(self):
