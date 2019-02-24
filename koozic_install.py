@@ -7,7 +7,7 @@ from multiprocessing import cpu_count
 import os
 import pwd
 import requests
-from shutil import move, rmtree
+from shutil import move, rmtree, which
 import subprocess as s
 import sys
 import tarfile
@@ -67,6 +67,8 @@ class Driver():
         s.call(['chown', '-R', '{u}:{u}'.format(u=self.user), self.dir])
 
     def copy_ffmpeg(self):
+        if which('ffmpeg'):
+            return
         ffmpeg = glob(os.path.join(self.dir, 'extra', 'ffmpeg', '*.tar.gz'))
         if ffmpeg:
             path = os.path.join(os.sep, 'usr', 'local', 'bin')
