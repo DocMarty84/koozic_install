@@ -269,6 +269,7 @@ class DriverDeb(Driver):
         self.dep |= set([
             'adduser',
             'build-essential',
+            'ffmpeg',
             'libtag1-dev',
             'lsb-base',
             'mediainfo',
@@ -409,6 +410,7 @@ class DriverUbuntu1604(DriverDeb):
     def __init__(self, args):
         super().__init__(args)
         self.dep -= set([
+            'ffmpeg',
             'python3-pyldap',
             'python3-qrcode',
             'python3-vobject',
