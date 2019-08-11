@@ -650,7 +650,7 @@ def get_driver(args):
     os_choices = OrderedDict()
     os_choices['1'] = ('Ubuntu 18.04', DriverUbuntu1804)
     os_choices['2'] = ('Ubuntu 16.04', DriverUbuntu1604)
-    os_choices['3'] = ('Debian 9', DriverDebian9)
+    os_choices['3'] = ('Debian 10 & 9', DriverDebian9)
     os_choices['4'] = ('Fedora 29', DriverFedora29)
     os_choices['5'] = ('CentOS 7.6', DriverCentos76)
     # os_choices['6'] = ('ArchLinux', DriverArch)
