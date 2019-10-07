@@ -13,7 +13,7 @@ import sys
 import tarfile
 from tempfile import NamedTemporaryFile
 
-BRANCH = 'v2'
+BRANCH = 'v3'
 K_NAME_DIR = K_NAME_DB = 'koozic-{}'.format(BRANCH)
 DOWN_URL = 'https://github.com/DocMarty84/koozic/releases/download/{v}/koozic-{v}.tar.gz'
 
@@ -292,6 +292,7 @@ class DriverDeb(Driver):
             'python3-passlib',
             'python3-pil',
             'python3-pip',
+            'python3-polib',
             'python3-psutil',
             'python3-psycopg2',
             'python3-pydot',
@@ -310,10 +311,11 @@ class DriverDeb(Driver):
             'python3-wheel',
             'python3-xlsxwriter',
             'python3-yaml',
+            'python3-zeep',
         ])
         self.pip_dep |= set([
-            'mutagen==1.41.1',
-            'pytaglib==1.4.4',
+            'mutagen==1.42.0',
+            'pytaglib==1.4.5',
             'num2words==0.5.6',
             'webvtt-py==0.4.2',
         ])
@@ -358,6 +360,7 @@ class DriverRpm(Driver):
             'python3-num2words',
             'python3-ofxparse',
             'python3-passlib',
+            'python3-polib',
             'python3-pillow',
             'python3-psutil',
             'python3-psycopg2',
@@ -380,12 +383,13 @@ class DriverRpm(Driver):
             'python3-werkzeug',
             'python3-xlrd',
             'python3-xlwt',
+            'python3-zeep',
             'redhat-rpm-config',
             'taglib-devel',
         ])
         self.pip_dep |= set([
-            'mutagen==1.41.1',
-            'pytaglib==1.4.4',
+            'mutagen==1.42.0',
+            'pytaglib==1.4.5',
             'webvtt-py==0.4.2',
             'XlsxWriter==0.9.3',
         ])
@@ -472,6 +476,7 @@ class DriverCentos76(DriverRpm):
             'python3-ofxparse',
             'python3-passlib',
             'python3-pillow',
+            'python3-polib',
             'python3-psutil',
             'python3-psycopg2',
             'python3-pydot',
@@ -493,6 +498,7 @@ class DriverCentos76(DriverRpm):
             'python3-werkzeug',
             'python3-xlrd',
             'python3-xlwt',
+            'python3-zeep',
         ])
         self.dep |= set([
             'libxslt-devel',
@@ -521,7 +527,8 @@ class DriverCentos76(DriverRpm):
             'num2words==0.5.6',
             'ofxparse==0.16',
             'passlib==1.6.5',
-            'Pillow==4.0.0',
+            'Pillow==5.4.1',
+            'polib==1.1.0',
             'psutil==4.3.1',
             'psycopg2==2.7.3.1',
             'pydot==1.2.3',
@@ -535,15 +542,15 @@ class DriverCentos76(DriverRpm):
             'qrcode==5.3',
             'reportlab==3.3.0',
             'requests==2.20.0',
-            'suds-jurko==0.6',
+            'zeep==3.1.0',
             'vatnumber==1.2',
             'vobject==0.9.3',
-            'Werkzeug==0.11.15',
+            'Werkzeug==0.14.1',
             'XlsxWriter==0.9.3',
             'xlwt==1.3.*',
             'xlrd==1.0.0',
-            'mutagen==1.41.1',
-            'pytaglib==1.4.4',
+            'mutagen==1.42.0',
+            'pytaglib==1.4.5',
             'webvtt-py==0.4.2',
         ])
 
@@ -607,6 +614,7 @@ class DriverArch(Driver):
             'ofxparse==0.16',
             'passlib==1.6.5',
             'Pillow==4.0.0',
+            'polib==1.1.0',
             'psutil==4.3.1',
             'psycopg2==2.7.3.1',
             'pydot==1.2.3',
@@ -620,15 +628,16 @@ class DriverArch(Driver):
             'qrcode==5.3',
             'reportlab==3.3.0',
             'requests==2.20.0',
+            'zeep==3.1.0',
             'suds-jurko==0.6',
             'vatnumber==1.2',
             'vobject==0.9.3',
-            'Werkzeug==0.11.15',
+            'Werkzeug==0.14.1',
             'XlsxWriter==0.9.3',
             'xlwt==1.3.*',
             'xlrd==1.0.0',
-            'mutagen==1.41.1',
-            'pytaglib==1.4.4',
+            'mutagen==1.42.0',
+            'pytaglib==1.4.5',
             'webvtt-py==0.4.2',
         ])
 
