@@ -191,7 +191,7 @@ class Driver():
             'db_name': K_NAME_DB,
             'dbfilter': '^{}$'.format(K_NAME_DB),
             'limit_memory_hard': max(1024 ** 3, int(limit_memory_hard)),
-            'limit_memory_soft': max(256 * 1024 ** 2, int(limit_memory_soft)),
+            'limit_memory_soft': max(896 * 1024 ** 2, int(limit_memory_soft)),
             'limit_time_cpu': 1800,
             'limit_time_real': 3600,
             'list_db': False,
