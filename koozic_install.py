@@ -311,7 +311,7 @@ class DriverDeb(Driver):
             ]
         )
         self.pip_dep |= set(
-            ["mutagen==1.42.0", "pytaglib==1.4.5", "num2words==0.5.6", "webvtt-py==0.4.2"]
+            ["mutagen==1.43.0", "pytaglib==1.4.5", "num2words==0.5.6", "webvtt-py==0.4.2"]
         )
 
     def _install(self, packages=[]):
@@ -319,11 +319,16 @@ class DriverDeb(Driver):
             s.call(["apt-get", "install", "-y", "--no-install-recommends", "-qq"] + packages)
 
 
-class DriverRpm(Driver):
+DriverUbuntu1804 = DriverDeb
+DriverDebian10 = DriverDeb
+
+
+class DriverFedora31(Driver):
     def __init__(self, args):
         super().__init__(args)
-        self.dep |= set(
+        self.dep = set(
             [
+                "babel",
                 "gcc",
                 "gcc-c++",
                 "libxslt-python",
@@ -331,7 +336,97 @@ class DriverRpm(Driver):
                 "postgresql",
                 "postgresql-contrib",
                 "postgresql-devel",
+                "postgresql-libs",
                 "postgresql-server",
+                "pychart",
+                "pyparsing",
+                "python3-PyPDF2",
+                "python3-PyYAML",
+                "python3-babel",
+                "python3-chardet",
+                "python3-dateutil",
+                "python3-decorator",
+                "python3-devel",
+                "python3-docutils",
+                "python3-feedparser",
+                "python3-gevent",
+                "python3-greenlet",
+                "python3-html2text",
+                "python3-jinja2",
+                "python3-libsass",
+                "python3-lxml",
+                "python3-mako",
+                "python3-markupsafe",
+                "python3-mock",
+                "python3-num2words",
+                "python3-ofxparse",
+                "python3-passlib",
+                "python3-pillow",
+                "python3-polib",
+                "python3-psutil",
+                "python3-psycopg2",
+                "python3-pydot",
+                "python3-pyldap",
+                "python3-pyparsing",
+                "python3-pyserial",
+                "python3-pytz",
+                "python3-pyusb",
+                "python3-qrcode",
+                "python3-reportlab",
+                "python3-requests",
+                "python3-six",
+                "python3-stdnum",
+                "python3-vatnumber",
+                "python3-vobject",
+                "python3-werkzeug",
+                "python3-xlrd",
+                "python3-xlwt",
+                "python3-zeep",
+                "redhat-rpm-config",
+                "taglib-devel",
+            ]
+        )
+        self.pip_dep = set(
+            ["XlsxWriter==1.1.2", "mutagen==1.43.0", "pytaglib==1.4.5", "webvtt-py==0.4.2"]
+        )
+
+    def setup_postgresql(self):
+        s.call(["postgresql-setup", "--initdb", "--unit", "postgresql"])
+        s.call(["systemctl", "enable", "postgresql"])
+        s.call(["systemctl", "start", "postgresql"])
+        super().setup_postgresql()
+
+    def _install(self, packages=[]):
+        if packages:
+            s.call(["dnf", "install", "-y", "-q"] + packages)
+
+    def _init_koozic_cmd(self):
+        return super()._init_koozic_cmd()[:-1] + ' --db-template=template0"'
+
+
+class DriverSuse15(Driver):
+    def __init__(self, args):
+        super().__init__(args)
+        self.dep = set(
+            [
+                "ffmpeg-3",
+                "gcc",
+                "gcc-c++",
+                "libxslt-python",
+                "mediainfo",
+                "openldap2-devel",
+                "postgresql",
+                "postgresql-contrib",
+                "postgresql-devel",
+                "postgresql-server",
+                "python3-Babel",
+                "python3-Jinja2",
+                "python3-Mako",
+                "python3-MarkupSafe",
+                "python3-Pillow",
+                "python3-PyPDF2",
+                "python3-PyYAML",
+                "python3-Werkzeug",
                 "python3-chardet",
                 "python3-decorator",
                 "python3-devel",
@@ -350,10 +445,10 @@ class DriverRpm(Driver):
                 "python3-psycopg2",
                 "python3-pydot",
                 "python3-pyparsing",
-                "python3-PyPDF2",
                 "python3-pyserial",
+                "python3-pytaglib",
+                "python3-python-dateutil",
                 "python3-pytz",
-                "python3-PyYAML",
                 "python3-qrcode",
                 "python3-reportlab",
                 "python3-requests",
@@ -364,84 +459,17 @@ class DriverRpm(Driver):
                 "python3-zeep",
             ]
         )
-        self.pip_dep |= set(["mutagen==1.42.0", "webvtt-py==0.4.2", "XlsxWriter==0.9.3"])
-
-    def clean_system(self):
-        super().clean_system()
-        if self._ask_user("Do you want to deactivate the PostgreSQL systemd service? "):
-            s.call(["systemctl", "stop", "postgresql"])
-            s.call(["systemctl", "disable", "postgresql"])
-
-
-class DriverUbuntu1804(DriverDeb):
-    def __init__(self, args):
-        super().__init__(args)
-
-
-class DriverDebian10(DriverDeb):
-    def __init__(self, args):
-        super().__init__(args)
-
-
-class DriverFedora31(DriverRpm):
-    def __init__(self, args):
-        super().__init__(args)
-        self.dep |= set(
+        self.pip_dep = set(
             [
-                "babel",
-                "postgresql-libs",
-                "pychart",
-                "pyparsing",
-                "python3-babel",
-                "python3-dateutil",
-                "python3-jinja2",
-                "python3-mako",
-                "python3-markupsafe",
-                "python3-ofxparse",
-                "python3-pillow",
-                "python3-pyldap",
-                "python3-pyusb",
-                "python3-stdnum",
-                "python3-vatnumber",
-                "python3-werkzeug",
-                "redhat-rpm-config",
-                "taglib-devel",
+                "XlsxWriter==1.1.2",
+                "mutagen==1.43.0",
+                "ofxparse==0.19",
+                "pyldap==2.4.28",
+                "pyusb==1.0.2",
+                "vatnumber==1.2",
+                "webvtt-py==0.4.2",
             ]
         )
-        self.pip_dep |= set(["pytaglib==1.4.5"])
-
-    def setup_postgresql(self):
-        s.call(["postgresql-setup", "--initdb", "--unit", "postgresql"])
-        s.call(["systemctl", "enable", "postgresql"])
-        s.call(["systemctl", "start", "postgresql"])
-        super().setup_postgresql()
-
-    def _install(self, packages=[]):
-        if packages:
-            s.call(["dnf", "install", "-y", "-q"] + packages)
-
-    def _init_koozic_cmd(self):
-        return super()._init_koozic_cmd()[:-1] + ' --db-template=template0"'
-
-
-class DriverSuse15(DriverRpm):
-    def __init__(self, args):
-        super().__init__(args)
-        self.dep |= set(
-            [
-                "ffmpeg-3",
-                "openldap2-devel",
-                "python3-Babel",
-                "python3-Jinja2",
-                "python3-Mako",
-                "python3-MarkupSafe",
-                "python3-Pillow",
-                "python3-pytaglib",
-                "python3-python-dateutil",
-                "python3-Werkzeug",
-            ]
-        )
-        self.pip_dep |= set(["ofxparse==0.16", "pyldap==2.4.28", "pyusb==1.0.0", "vatnumber==1.2"])
 
     def setup_postgresql(self):
         s.call(["systemctl", "enable", "postgresql"])
