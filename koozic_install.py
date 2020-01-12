@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 
 import argparse
-from collections import OrderedDict
-from glob import glob
-from multiprocessing import cpu_count
 import os
 import pwd
-import requests
-from shutil import rmtree, which
 import subprocess as s
 import sys
 import tarfile
+from collections import OrderedDict
+from glob import glob
+from multiprocessing import cpu_count
+from shutil import rmtree, which
 from tempfile import NamedTemporaryFile
+
+import requests
 
 BRANCH = "v3"
 K_NAME_DIR = K_NAME_DB = "koozic-{}".format(BRANCH)
