@@ -14,7 +14,7 @@ from tempfile import NamedTemporaryFile
 
 import requests
 
-BRANCH = "v3"
+BRANCH = "v3-3.1.0"
 K_NAME_DIR = K_NAME_DB = "koozic-{}".format(BRANCH)
 DOWN_URL = "https://github.com/DocMarty84/koozic/releases/download/{v}/koozic-{v}.tar.gz"
 
