@@ -320,7 +320,7 @@ class DriverDeb(Driver):
             s.call(["apt-get", "install", "-y", "--no-install-recommends", "-qq"] + packages)
 
 
-DriverUbuntu1804 = DriverDeb
+DriverUbuntu2004 = DriverDeb
 DriverDebian10 = DriverDeb
 
 
@@ -484,7 +484,7 @@ class DriverSuse15(Driver):
 def get_driver(args):
     # Choose OS
     os_choices = OrderedDict()
-    os_choices["1"] = ("Ubuntu 18.04", DriverUbuntu1804)
+    os_choices["1"] = ("Ubuntu 20.04 / 18.04", DriverUbuntu2004)
     os_choices["2"] = ("Debian 10", DriverDebian10)
     os_choices["3"] = ("Fedora 31", DriverFedora31)
     os_choices["4"] = ("OpenSUSE 15.1", DriverSuse15)
